@@ -1,0 +1,112 @@
+"""
+Leon Moreton
+"""
+from time import *
+import random
+
+#Variables----------------------------------
+w = int(0)#Used to stop an impossible game
+x = int(0)#Counts the first go has been taken and is reused to track if the letters have matched
+y = int(0)#Counts the place in the guesses list
+z = int(0)#Counts the place in the word
+guesses =[]
+wordlist =["avengers","giant","hulk","silly","cheese","fight"]
+Cwordlist = []
+wordC = str()
+guessword = str()
+Lives = int(9)
+start = str()
+
+print("                           WELCOME TO")
+sleep(0.5)
+print("██    ██     █▀▀█    ██   █  ▄█████  ██     ██   █▀▀█    ██   █")
+sleep(0.5)
+print("██▄▄▄▄██    █    █   █ █  █  █       █ █   █ █  █    █   █ █  █")
+sleep(0.5)
+print("██▀▀▀▀██   █▀▀▀▀▀▀█  █  █ █  █   ▀█▀ █  █ █  █ █▀▀▀▀▀▀█  █  █ █")
+sleep(0.5)
+print("██    ██   █      █  █   ██  ▀████▀  █   █   █ █      █  █   ██")
+sleep(0.5)
+
+while (start != "c" and start != "p"):
+    print("")
+    start = str(input("To play type 'p', To look at the rules type 'r', To use your own custom words   list type 'c': "))
+#Rules--------------------------------------
+    if(start == "r"):
+        print("You have 9 lives to guess the word, you lose a life everytime you fail to guess the letter correctly however, no lives are lost for guessing the word wrong.")
+#Custom words-------------------------------
+if(start == "c"):
+    print("To stop adding words to the list, type 'end'. You can have as many words as you like.")
+    while(wordC != "end" or len(Cwordlist) == 0):
+        wordC = str(input("What word do you want to add to the list: "))
+        if(wordC != "end"):
+            Cwordlist.append(wordC)
+    wordlist = Cwordlist
+    
+word = random.choice(wordlist)#It's here so if there is a custom word, it will use that as a wordlist instead.
+#Initial start------------------------------
+while (x != len(word)):
+    print ("-")
+    x = x+1
+x = int(0)
+#Game loop----------------------------------
+while (guessword != word and Lives != 0):
+#Lines--------------------------------------
+    if (len(guesses) != 0):
+        while(z != len(word)):
+            while(y != len(guesses)):
+                if(word[z] == guesses[y]):
+                    print(word[z])
+                    x = int(1)
+                    w = w + 1
+                y = y+1
+                if(y == len(guesses) and x == 0):
+                    print("-")
+                    
+            z = z+1   #Reset
+            y = int(0)#Resets the checker
+            x = int(0)#Reset
+        z = int(0)#Final Resets
+        y = int(0)#  "     "
+            
+#Guessing-----------------------------------
+    print ("Lives Left:")
+    print (Lives)
+
+    if(w == len(word)):
+        guessword = str(input("What do you think the word is? "))
+        if(guessword == word):#<---------------------------------------They guess the word right
+            print ("You win!")
+        else:
+            print("Wrong!")
+        
+    guessL = str(input("What letter do you guess: "))
+
+#Wrong or right-----------------------------
+    if (guessL in guesses):#<------------------------------------------If the letter has been used (Wrong or right)
+        print ("You've already guesses this!")
+    elif(len(guessL) > 1):
+        print ("Only one character!")
+    elif (guessL in word and guessL != ""):#<--------------------------Letter is correct
+        print ("Well done you got one")
+        guesses.append(guessL)#<---------------------------------------Adds the letter to the used letter list
+        question = str(input("Do you want to guess the word? (Y/N) "))
+        if(question == "Y" or question == "y"):#<----------------------To guess the word
+            guessword = str(input("What do you think the word is? "))
+            if(guessword == word):#<-----------------------------------They guess the word right
+                print ("You win!")
+            else:
+                print("Wrong!")
+    elif(guessL not in word):#<----------------------------------------Letter is wrong
+        print ("That's not in the word!")
+        Lives = Lives - 1
+        guesses.append(guessL)
+#Lost---------------------------------------
+    if(Lives == 0):
+        print("NO LIVES LEFT")
+        print("YOU LOSE!")
+        
+    w = int(0)
+#End of game loop---------------------------
+sleep (1)
+print("Thank you for playing Hangman, coded by Leon Moreton")
