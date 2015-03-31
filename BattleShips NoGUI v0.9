@@ -1,0 +1,113 @@
+"""Battle Ships V1.0 Leon Moreton"""
+import random
+from tkinter import *
+#---VARIABLES USED (X and Y are the Axis)---
+#The player---
+PlayerHealth = int()
+PlayerShipX = int()
+PlayerShipY = int()
+PlayerShotX = int()
+PlayerShotY = int()
+PlayerShotXY = str() #Used to check coords
+PlayerShotHistory = []
+#The computer---
+EnemyHealth = int()
+EnemyShipX = int()
+EnemyShipY = int()
+EnemyShotX = int()
+EnemyShotY = int()
+EnemyShotXY = str() #Used to check coords
+EnemyShotHistory = []
+#Other---
+End = str("y")
+PlayerError1 = int()
+PLayerError2 = int()
+EnemyError = int()
+
+#---GAME LOOP---
+while End == "y":
+    
+#---GAME RESTART---
+    PlayerError1 = 1
+    
+    #---PLAYER STATS AND CHECKER---
+    PlayerHealth = 1
+    while PlayerError1 == 1:
+        try:
+            PlayerY = int(input("What is your ships Y coordinate? (1-5): "))
+            PlayerX = int(input("What is your ships X coordinate? (1-5): "))
+        except ValueError: #<--Idiot Proofing---
+            print("It has to be an integer.")
+            continue
+        if PlayerX > 5 or PlayerY > 5 or PlayerX < 1 or PlayerY <1:#<--Idiot proofing---
+            print("Your coords have to be between 1 and 5 inclusive")
+        else:
+            PlayerError1 = 0
+    
+    #---ENEMY STATS---
+    EnemyHealth = int(1)
+    EnemyShipX = random.randint(1,5)
+    EnemyShipY = random.randint(1,5)
+
+    #---BOARD CREATION---
+    Placement = [[0 for i in range(5)]for j in range(5)]
+    Placement[PlayerY-4][PlayerX-1] = "☺"
+    for i in range (5):
+        print (Placement[i])
+        i = i+1
+
+    
+    #---GUESS LOOP AND ERROR CHECKER---
+    while PlayerHealth == 1 and EnemyHealth == 1:
+    #---RESTART OF LOOP---
+        PlayerError2 = 1
+        while PlayerError2 == 1:#<---Idiot Proofing---
+            try:
+                PlayerShotX = int(input("What X coord are we aiming for?(1-5) "))#<---Shot X
+                PlayerShotY = int(input("What Y coord are we aiming for?(1-5) "))#<---Shot Y
+            except ValueError:#<--Idiot proofing---
+                print("It has to be an integer.")
+                continue
+            if PlayerShotX > 5 or PlayerShotY > 5 or PlayerShotX < 1 or PlayerShotY <1:#<--Idiot proofing---
+                print("Your coords have to be between 1 and 5 inclusive.")
+            PlayerShotXY = (PlayerShotX, PlayerShotY)
+            if(PlayerShotXY in PlayerShotHistory):
+                print("You have alredy used those coords.")
+            if(PlayerShotXY not in PlayerShotHistory and PlayerShotX < 6 and PlayerShotY < 6 and PlayerShotX > 0 and PlayerShotY > 0):
+                PlayerShotHistory.append(PlayerShotXY)
+                Placement [PlayerShotY-1][PlayerShotX-1] = X
+                PlayerError2 = 0
+        
+    #---Player Hits the enemy
+        if PlayerShotX == EnemyShipX and PlayerShotY == EnemyShipY: 
+            EnemyHealth = 0
+            print("")
+            End = str(input("Well done! You sunk them! Wanna play again?(y/n) "))
+            
+    #---The player does not hit the enemy---
+        elif PlayerShotX != EnemyShipX or PlayerShotY != EnemyShipY: 
+            print("Damn you missed! Brace yourself, they're aiming!")
+            EnemyError = 1
+            while EnemyError == 1:
+                EnemyShotX = random.randint(1,5)
+                EnemyShotY = random.randint(1,5)
+                EnemyShotXY = EnemyShotX, EnemyShotY
+                if EnemyShotXY in EnemyShotHistory:
+                    EnemyError = 1
+                else:
+                    EnemyError = 0
+    #---The enemy hits the player--- 
+            if EnemyShotX == PlayerX and EnemyShotY == PlayerY:
+                PlayerHealth = 0
+                End = str(input("Argh! Retreat! We've been hit! Want to repair and try again?(y/n) "))
+                
+    #---Everyone misses---
+            else:
+                print("Phew they missed! Quick aim another!")
+                print("")
+                for i in range (5):
+                    print (Placement[i])
+                    i = i+1
+    
+print("Thanks for playing! Made COMPLETELY by Leon Moreton!")
+
